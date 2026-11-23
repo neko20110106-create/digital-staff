@@ -14,22 +14,21 @@
 <div class="mainstation arrived" id="mainStation"><div class="station-label" id="stationLabel">現在駅</div><div class="station-name" id="stationName">岐阜</div><div class="station-time" id="stationTime">発 23:40</div></div>
 <div class="nextline" id="nextLine">次駅 <strong>尾張一宮</strong></div>
 <div class="actions"><button class="good" id="depart">出発</button><button id="arrive">停車・到着</button><button id="pass">通過</button><button class="primary" id="advance">次駅へ進む</button><button id="back">1駅戻る</button><button id="reset">リセット</button></div></section>
-<section class="panel"><div class="delay"><strong>遅延設定（分）</strong><input id="delay" type="number" value="0" min="-60" max="180"><button id="applyDelay">反映</button><span id="delayText" class="muted">定時</span></div><p class="muted">出発すると次駅が大きく表示されます。停車・到着を押すと、その駅が現在駅表示に切り替わります。駅の進行は手動操作です。</p></section>
 <div class="status" id="status"></div><footer class="footer">本アプリは趣味・シミュレーション用です。実際の鉄道運行・乗務・保安装置の代用には使用しないでください。データはこのブラウザ内に保存され、別端末とは自動同期されません。</footer>
 </main><script>
 const initial={train:"123M",kind:"普通",dest:"名古屋",line:"東海道本線 / 下り",stations:[{name:"岐阜",arr:"",dep:"23:40",stop:"停車"},{name:"尾張一宮",arr:"23:49",dep:"23:50",stop:"停車"},{name:"名古屋",arr:"00:02",dep:"",stop:"停車"},{name:"金山",arr:"00:06",dep:"00:07",stop:"停車"},{name:"共和",arr:"00:17",dep:"",stop:"通過"}]};
-let d=JSON.parse(localStorage.getItem("staff")||"null")||initial,idx=0,state="停車中",delay=0,seconds=0,last=Date.now();
+let d=JSON.parse(localStorage.getItem("staff")||"null")||initial,idx=0,state="停車中",delay=Number(localStorage.getItem("staffDelay")||0),seconds=0,last=Date.now();
 const $=id=>document.getElementById(id);
 function plus(t,m){if(!t)return "—";let [h,n]=t.split(":").map(Number),v=(h*60+n+m+14400)%1440;return String(v/60|0).padStart(2,"0")+":"+String(v%60).padStart(2,"0")}
-function render(){const a=d.stations[idx],b=d.stations[idx+1];$("trainNo").textContent=d.train||"—";$("kind").textContent=d.kind||"—";$("dest").textContent=d.dest||"—";$("line").textContent=d.line||"—";$("progress").textContent=(d.stations.length?idx+1:0)+" / "+d.stations.length+" 駅";$("state").textContent=state;$("stationLabel").textContent=state==="運転中"||state==="通過"?"次駅":"現在駅";$("stationName").textContent=a?.name||"—";$("stationTime").textContent=a?(state==="運転中"?(a.arr?"着 "+plus(a.arr,delay):a.dep?"発 "+plus(a.dep,delay):"時刻未設定"):(a.dep?"発 "+plus(a.dep,delay):a.arr?"着 "+plus(a.arr,delay):"時刻未設定")):"—";$("mainStation").classList.toggle("arrived",state!=="運転中"&&state!=="通過");$("nextLine").innerHTML=b?'次駅 <strong>'+escapeHtml(b.name)+'</strong>':"次駅 <strong>終点</strong>";$("delayText").textContent=delay===0?"定時":(delay>0?delay+"分遅れ":Math.abs(delay)+"分早着")}
+function render(){const a=d.stations[idx],b=d.stations[idx+1];$("trainNo").textContent=d.train||"—";$("kind").textContent=d.kind||"—";$("dest").textContent=d.dest||"—";$("line").textContent=d.line||"—";$("progress").textContent=(d.stations.length?idx+1:0)+" / "+d.stations.length+" 駅";$("state").textContent=state;$("stationLabel").textContent=state==="運転中"||state==="通過"?"次駅":"現在駅";$("stationName").textContent=a?.name||"—";$("stationTime").textContent=a?(state==="運転中"?(a.arr?"着 "+plus(a.arr,delay):a.dep?"発 "+plus(a.dep,delay):"時刻未設定"):(a.dep?"発 "+plus(a.dep,delay):a.arr?"着 "+plus(a.arr,delay):"時刻未設定")):"—";$("mainStation").classList.toggle("arrived",state!=="運転中"&&state!=="通過");$("nextLine").innerHTML=b?'次駅 <strong>'+escapeHtml(b.name)+'</strong>':"次駅 <strong>終点</strong>";}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function msg(t){$("status").textContent=t}
 $("depart").onclick=()=>{if(idx>=d.stations.length-1){state="終点";render();msg("終点のため次駅はありません");return}idx++;state="運転中";render();msg(d.stations[idx].name+" を次駅として表示中")};
 $("arrive").onclick=()=>{state="停車中";render();msg(d.stations[idx]?.name+" を現在駅として表示中")};
-$("pass").onclick=()=>{state="通過";render();msg(d.stations[idx]?.name+" を通過扱いにしました")};
+$("pass").onclick=()=>{if(idx>=d.stations.length){state="終点";render();msg("終点のため通過できる駅はありません");return}const passed=d.stations[idx]?.name||"駅";if(idx<d.stations.length-1){idx++;state="通過";render();msg(passed+" を通過扱いにしました。次駅："+d.stations[idx].name)}else{state="終点";render();msg(passed+" を通過扱いにしました。終点です")}};
 $("advance").onclick=()=>{if(idx<d.stations.length-1){idx++;state=d.stations[idx].stop==="通過"?"通過":"停車中";render();msg("次駅へ進みました")}else msg("終点です")};
 $("back").onclick=()=>{idx=Math.max(0,idx-1);state="停車中";render();msg("1駅戻りました")};
 $("reset").onclick=()=>{idx=0;state="停車中";seconds=0;render();msg("リセットしました")};
-$("applyDelay").onclick=()=>{delay=Math.max(-60,Math.min(180,Number($("delay").value)||0));render();msg("遅延設定を反映しました")};
+
 function tick(){let n=Date.now();seconds+=Math.floor((n-last)/1000);last=n;$("clock").textContent=[seconds/3600|0,seconds%3600/60|0,seconds%60].map(v=>String(v).padStart(2,"0")).join(":")}setInterval(tick,1000);render();
 </script></body></html>
