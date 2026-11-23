@@ -19,7 +19,7 @@
   .timeline-station{font-size:clamp(21px,3vw,29px);font-weight:800;line-height:1.2;overflow-wrap:anywhere}
   .timeline-kind{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
   .timeline-row.current{border:2px solid #478765;background:#19251f;min-height:100px}
-  .timeline-row.next{border:2px solid #8b674e;background:#29221d;min-height:100px}
+  .timeline-row.next{border:1px solid var(--line);background:#20262d;min-height:100px}
   .timeline-row.current .timeline-station,.timeline-row.next .timeline-station{font-size:clamp(32px,5vw,48px);font-weight:850}
   .timeline-row.current .timeline-kind,.timeline-row.next .timeline-kind{font-size:14px}
   .tablet-actions{position:fixed;z-index:20;left:50%;bottom:env(safe-area-inset-bottom);transform:translateX(-50%);display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:10px;width:min(calc(100% - 32px),1018px);margin:0;padding:10px 0 8px;background:var(--bg)}
@@ -63,15 +63,16 @@ function render(){const a=d.stations[idx],b=d.stations[idx+1];$("trainNo").textC
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function tabletPortrait(){return window.matchMedia("(min-width:700px) and (max-width:1300px) and (orientation:portrait)").matches}
 function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const stations=d.stations||[];if(!stations.length){el.innerHTML='<div class="timeline-row current"><span class="timeline-label">現在地</span><strong class="timeline-station">—</strong></div>';return}
- const current= Math.max(0,Math.min(state==="運転中"?idx-1:idx,stations.length-1));
+ const isRunning=state==="運転中"||state==="通過";
+ const current=Math.max(0,Math.min(isRunning?idx-1:idx,stations.length-1));
  const next=current+1;
  const maxRows=Math.max(3,Math.floor((window.innerHeight-470)/70)+2);
  const futureCount=Math.max(0,maxRows-2);
  const futureEnd=Math.min(stations.length-1,next+futureCount-1);
  let html="";
- for(let i=futureEnd;i>=next;i--){const s=stations[i];const kind=s.stop==="通過"?"通過":"停車";html+='<div class="timeline-row"><span class="timeline-label">'+kind+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
- if(next<stations.length){const s=stations[next];html+='<div class="timeline-row next"><span class="timeline-label">次駅<br>'+ (s.stop==="通過"?"通過":"停車")+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
- const here=stations[current];html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div><span class="timeline-kind">'+(here.stop==="通過"?"通過":state==="運転中"?"走行中":"停車中")+'</span><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong></div></div>';
+ for(let i=futureEnd;i>next;i--){const s=stations[i];const kind=s.stop==="通過"?"通過":"停車";html+='<div class="timeline-row"><span class="timeline-label">'+kind+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
+ if(next<stations.length){const s=stations[next];html+='<div class="timeline-row next"><span class="timeline-label">次駅<br>'+(s.stop==="通過"?"通過":"停車")+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
+ if(!isRunning){const here=stations[current];html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div><span class="timeline-kind">'+(here.stop==="通過"?"通過":"停車中")+'</span><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong></div></div>'}
  el.innerHTML=html;
  const target=stations[next];const action=$("tabletMainAction");if(state==="停車中"){action.textContent="発車";action.classList.remove("pass-mode");action.disabled=current>=stations.length-1}else if(target&&target.stop==="通過"){action.textContent="通過";action.classList.add("pass-mode");action.disabled=false}else{action.textContent="停車";action.classList.remove("pass-mode");action.disabled=!target}
  $("tabletBack").disabled=current<=0;$("tabletAdvance").disabled=current>=stations.length-1;$("tabletHint").textContent=state==="停車中"?"停車中：発車ボタンで次駅へ進みます":target?(target.stop==="通過"?"次駅は通過駅です":"次駅で停車できます"):"終点です";
