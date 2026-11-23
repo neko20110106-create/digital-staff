@@ -16,7 +16,7 @@
 <div class="actions"><button class="good" id="depart">出発</button><button id="arrive">停車・到着</button><button id="pass">通過</button><button class="primary" id="advance">次駅へ進む</button><button id="back">1駅戻る</button><button id="reset">リセット</button></div></section>
 <div class="status" id="status"></div><footer class="footer">本アプリは趣味・シミュレーション用です。実際の鉄道運行・乗務・保安装置の代用には使用しないでください。データはこのブラウザ内に保存され、別端末とは自動同期されません。</footer>
 </main><script>
-const initial={train:"123M",kind:"普通",dest:"名古屋",line:"東海道本線 / 下り",stations:[{name:"岐阜",arr:"",dep:"23:40",stop:"停車"},{name:"尾張一宮",arr:"23:49",dep:"23:50",stop:"停車"},{name:"名古屋",arr:"00:02",dep:"",stop:"停車"},{name:"金山",arr:"00:06",dep:"00:07",stop:"停車"},{name:"共和",arr:"00:17",dep:"",stop:"通過"}]};
+const initial={train:"0000A",kind:"普通",dest:"名古屋",line:"東海道本線 / 下り",stations:[{name:"岐阜",arr:"",dep:"10:00",stop:"停車"},{name:"木曽川",arr:"10:05",dep:"10:06",stop:"停車"},{name:"尾張一宮",arr:"10:10",dep:"10:11",stop:"停車"},{name:"稲沢",arr:"10:15",dep:"10:16",stop:"停車"},{name:"清洲",arr:"10:20",dep:"10:21",stop:"停車"},{name:"枇杷島",arr:"10:24",dep:"10:25",stop:"停車"},{name:"名古屋",arr:"10:29",dep:"",stop:"停車"}]};
 let d=JSON.parse(localStorage.getItem("staff")||"null")||initial,idx=0,state="停車中",delay=Number(localStorage.getItem("staffDelay")||0),seconds=0,last=Date.now();
 const $=id=>document.getElementById(id);
 function plus(t,m){if(!t)return "—";let [h,n]=t.split(":").map(Number),v=(h*60+n+m+14400)%1440;return String(v/60|0).padStart(2,"0")+":"+String(v%60).padStart(2,"0")}
