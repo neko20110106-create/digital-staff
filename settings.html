@@ -27,6 +27,7 @@ $("remove").onclick=()=>{if(selected<0)return msg("削除する駅を選んで�
 function download(n,t,type){let u=URL.createObjectURL(new Blob([t],{type})),a=document.createElement("a");a.href=u;a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 $("export").onclick=()=>{["train","kind","dest","line"].forEach(k=>d[k]=$(k).value);persist();download("digital-staff.json",JSON.stringify(d,null,2),"application/json");msg("JSONを書き出しました")};
 $("import").onclick=()=>$("file").click();$("file").onchange=async e=>{try{if(!e.target.files[0])return;let x=JSON.parse(await e.target.files[0].text());if(!Array.isArray(x.stations))throw Error();d={...initial,...x};persist();render();clear();msg("JSONを読み込みました")}catch{msg("JSONを読み込めませんでした。ファイルを確認してください")}e.target.value=""};
-function csvCell(value){let s=String(value??"");if(/^[\\s\\u0000-\\u001f]*[=+\\-@]/.test(s))s="\\t"+s;return '"'+s.replace(/"/g,'""')+'"'}
-$("csv").onclick=()=>download("digital-staff-stations.csv","駅名,着時刻,発時刻,扱い\\r\\n"+d.stations.map(s=>[s.name,s.arr||"",s.dep||"",s.stop||"停車"].map(csvCell).join(",")).join("\\r\\n"),"text/csv;charset=utf-8")render();
+function csvCell(value){let s=String(value??"");if(/^[\s\u0000-\u001f]*[=+\-@]/.test(s))s="\t"+s;return '"'+s.replace(/"/g,'""')+'"'}
+$("csv").onclick=()=>download("digital-staff-stations.csv","駅名,着時刻,発時刻,扱い\r\n"+d.stations.map(s=>[s.name,s.arr||"",s.dep||"",s.stop||"停車"].map(csvCell).join(",")).join("\r\n"),"text/csv;charset=utf-8");
+render();
 </script></body></html>
