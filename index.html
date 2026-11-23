@@ -54,7 +54,7 @@ function render(){const a=d.stations[idx],b=d.stations[idx+1];$("trainNo").textC
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function tabletPortrait(){return window.matchMedia("(min-width:700px) and (max-width:1300px) and (orientation:portrait)").matches}
 function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const stations=d.stations||[];if(!stations.length){el.innerHTML='<div class="timeline-row current"><span class="timeline-label">現在地</span><strong class="timeline-station">—</strong></div>';return}
- const current= Math.max(0,Math.min(idx,stations.length-1));
+ const current= Math.max(0,Math.min(state==="運転中"?idx-1:idx,stations.length-1));
  const next=current+1;
  const maxRows=Math.max(3,Math.floor((window.innerHeight-470)/70)+2);
  const futureCount=Math.max(0,maxRows-2);
@@ -76,7 +76,7 @@ $("back").onclick=()=>{idx=Math.max(0,idx-1);state="停車中";render();msg("1�
 $("reset").onclick=()=>{idx=0;state="停車中";seconds=0;render();msg("リセットしました")};
 $("tabletBack").onclick=()=>{$("back").click()};
 $("tabletAdvance").onclick=()=>{$("depart").click()};
-$("tabletMainAction").onclick=()=>{const target=idx+1;if(target>=d.stations.length)return;idx=target;if(d.stations[idx].stop==="通過"){state="通過";render();msg(d.stations[idx].name+" を通過しました")}else{state="停車中";seconds=0;last=Date.now();$("clock").textContent="00:00:00";render();msg(d.stations[idx].name+" に停車しました")}};
+$("tabletMainAction").onclick=()=>{const target=state==="運転中"?idx:idx+1;if(target>=d.stations.length)return;idx=target;if(d.stations[idx].stop==="通過"){state="通過";render();msg(d.stations[idx].name+" を通過しました")}else{state="停車中";seconds=0;last=Date.now();$("clock").textContent="00:00:00";render();msg(d.stations[idx].name+" に停車しました")}};
 window.addEventListener("resize",()=>{if(tabletPortrait())renderTabletTimeline()});
 
 
