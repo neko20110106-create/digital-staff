@@ -8,7 +8,8 @@
 <script>
 const initial={train:"123M",kind:"普通",dest:"名古屋",line:"東海道本線 / 下り",stations:[{name:"岐阜",arr:"",dep:"23:40",stop:"停車"},{name:"尾張一宮",arr:"23:49",dep:"23:50",stop:"停車"},{name:"名古屋",arr:"00:02",dep:"",stop:"停車"},{name:"金山",arr:"00:06",dep:"00:07",stop:"停車"},{name:"共和",arr:"00:17",dep:"",stop:"通過"}]};
 let d=JSON.parse(localStorage.getItem("staff")||"null")||initial,selected=-1;const $=id=>document.getElementById(id);
-function persist(){localStorage.setItem("staff",JSON.stringify(d))}function msg(t){$("status").textContent=t}\n$("delay").value=localStorage.getItem("staffDelay")||"0";$("saveDelay").onclick=()=>{const n=Math.max(-60,Math.min(180,Number($("delay").value)||0));localStorage.setItem("staffDelay",String(n));$("delay").value=n;msg("遅延設定を保存しました。運転画面に反映されます")};
+function persist(){localStorage.setItem("staff",JSON.stringify(d))}function msg(t){$("status").textContent=t}
+$("delay").value=localStorage.getItem("staffDelay")||"0";$("saveDelay").onclick=()=>{const n=Math.max(-60,Math.min(180,Number($("delay").value)||0));localStorage.setItem("staffDelay",String(n));$("delay").value=n;msg("遅延設定を保存しました。運転画面に反映されます")};
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function render(){["train","kind","dest","line"].forEach(k=>$(k).value=d[k]||"");$("rows").innerHTML=d.stations.map((s,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(s.name)+'</td><td>'+(s.arr||"—")+'</td><td>'+(s.dep||"—")+'</td><td>'+esc(s.stop||"停車")+'</td><td><button class="rowbtn" data-i="'+i+'">編集</button></td></tr>').join("")}
 $("saveMeta").onclick=()=>{["train","kind","dest","line"].forEach(k=>d[k]=$(k).value.trim());persist();msg("列車情報を保存しました")};
