@@ -14,7 +14,7 @@
 <div class="mainstation arrived" id="mainStation"><div class="station-label" id="stationLabel">現在駅</div><div class="station-name" id="stationName">岐阜</div><div class="station-time" id="stationTime">発 23:40</div></div>
 <div class="nextline" id="nextLine">次駅 <strong>尾張一宮</strong></div>
 <div class="actions"><button class="good" id="depart">出発</button><button id="arrive">停車・到着</button><button id="pass">通過</button><button class="primary" id="advance">次駅へ進む</button><button id="back">1駅戻る</button><button id="reset">リセット</button></div></section>
-<div class="status" id="status"></div><footer class="footer">本アプリは趣味・シミュレーション用です。実際の鉄道運行・乗務・保安装置の代用には使用しないでください。データはこのブラウザ内に保存され、別端末とは自動同期されません。</footer>
+<div class="status" id="status"></div><footer class="footer">本アプリは個人制作の非公式な趣味・シミュレーション用です。実在の鉄道会社・鉄道事業者とは関係ありません。表示内容はサンプルまたは利用者が入力した情報であり、実際の運行情報ではありません。実際の鉄道運行・乗務・運転取扱い・保安装置の代用には絶対に使用しないでください。データはこのブラウザ内に保存され、別端末とは自動同期されません。</footer>
 </main><script>
 const initial={train:"0000A",kind:"普通",dest:"名古屋",line:"東海道本線 / 下り",stations:[{name:"岐阜",arr:"",dep:"10:00",stop:"停車"},{name:"木曽川",arr:"10:05",dep:"10:06",stop:"停車"},{name:"尾張一宮",arr:"10:10",dep:"10:11",stop:"停車"},{name:"稲沢",arr:"10:15",dep:"10:16",stop:"停車"},{name:"清洲",arr:"10:20",dep:"10:21",stop:"停車"},{name:"枇杷島",arr:"10:24",dep:"10:25",stop:"停車"},{name:"名古屋",arr:"10:29",dep:"",stop:"停車"}]};
 let d=JSON.parse(localStorage.getItem("staff")||"null")||initial,idx=0,state="停車中",delay=Number(localStorage.getItem("staffDelay")||0),seconds=0,last=Date.now();
