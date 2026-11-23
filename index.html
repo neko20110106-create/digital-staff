@@ -90,7 +90,7 @@ function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const
  const current=Math.max(0,Math.min(isRunning?idx-1:idx,stations.length-1));
  const next=current+1;
  const maxRows=displayCount();
- const futureCount=Math.max(0,maxRows-(isRunning?1:2));
+ const futureCount=Math.max(1,maxRows-(isRunning?0:1));
  const futureEnd=Math.min(stations.length-1,next+futureCount-1);
  let html="";
  for(let i=futureEnd;i>next;i--){const s=stations[i];const pass=s.stop==="通過";html+='<div class="timeline-row"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過駅":"停車駅")+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
