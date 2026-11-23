@@ -7,7 +7,7 @@
 :root{color-scheme:dark;--bg:#15191e;--panel:#242a31;--panel2:#303841;--line:#46515c;--text:#f4f6f8;--muted:#aab3bc;--accent:#d98b5c;--green:#70c49a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,a{font:inherit}button,a.btn{border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);padding:12px 16px;text-decoration:none;cursor:pointer}.wrap{max-width:1050px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap}.top>div{min-width:0}.top .btn{white-space:nowrap;flex:0 0 auto;padding:10px 13px;font-size:clamp(12px,3.3vw,16px)}.brandline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.brand-title{font-size:clamp(24px,5vw,34px);font-weight:850;line-height:1.2}.pill{border:1px solid var(--line);border-radius:99px;padding:5px 10px;color:var(--muted);font-size:12px;white-space:nowrap}.sub,.muted{color:var(--muted);font-size:13px}.trainbar{display:flex;gap:10px 22px;align-items:center;flex-wrap:wrap;background:#20262d;border:1px solid var(--line);border-radius:16px;padding:14px 18px;margin:16px 0}.trainitem{display:flex;gap:7px;align-items:baseline}.trainitem small{color:var(--muted);font-size:12px}.trainitem strong{font-size:clamp(17px,3vw,23px)}.trainno strong{font-size:clamp(21px,4vw,28px);letter-spacing:.04em}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin:14px 0}.route{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.clock-wrap{display:flex;align-items:center;gap:9px;flex:0 0 auto}.elapsed-label{font-size:11px;color:var(--muted);font-weight:500;white-space:nowrap}.clock{font-size:clamp(28px,6vw,46px);font-weight:800;font-variant-numeric:tabular-nums}.mainstation{margin-top:14px;background:#171c21;border:2px solid #8b674e;border-radius:18px;padding:clamp(18px,4vw,30px);text-align:center;min-height:210px;display:flex;flex-direction:column;justify-content:center}.mainstation.arrived{border-color:#478765}.station-label{color:var(--muted);font-size:14px;letter-spacing:.12em}.station-name{font-size:clamp(42px,9vw,76px);font-weight:850;line-height:1.15;margin:12px 0}.station-time{font-size:clamp(24px,5vw,36px);font-weight:800;font-variant-numeric:tabular-nums}.nextline{margin-top:12px;text-align:center;color:var(--muted);font-size:15px}.nextline strong{color:var(--text);font-size:19px;margin-left:8px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.actions button{flex:1;min-width:115px}.good{background:#28694d;border-color:#469a70}.actions #arrive{background:#a94b4b;border-color:#cf7777}.actions #pass{background:#b96b27;border-color:#df914b}.actions #advance,.actions #back,.actions #reset{background:#3a424c;border-color:#56616d}.primary{background:#875333;border-color:#bd805b}.delay{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.delay input{width:85px;background:#171c21;color:white;padding:9px;border:1px solid var(--line);border-radius:9px}.status{color:var(--green);font-size:13px;min-height:20px}.footer{text-align:center;color:var(--muted);font-size:11px;line-height:1.6;margin:24px 0}
 /* Tablet portrait: JR-Tokai-inspired vertical station sequence */
-.tablet-timeline,.tablet-actions{display:none}
+.tablet-timeline,.tablet-actions,.tablet-console{display:none}
 @media (min-width:700px) and (max-width:1300px) and (orientation:portrait){
   .wrap{min-height:100vh;min-height:100dvh}
   .panel{display:flex;flex-direction:column;min-height:0}
@@ -19,7 +19,12 @@
   .timeline-kind{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
   .timeline-row.current{border:2px solid #478765;background:#19251f}
   .timeline-row.next{border:2px solid #8b674e;background:#29221d}
-  .tablet-actions{display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:10px;margin-top:auto;padding-top:14px}
+  .tablet-actions{display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:10px;margin-top:14px;padding-top:0}
+  .tablet-console{display:block;margin-top:12px;padding:12px 14px;background:#20262d;border:1px solid var(--line);border-radius:14px}
+  .console-title{font-size:13px;font-weight:750;color:var(--muted);margin-bottom:9px;letter-spacing:.08em}
+  .console-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .console-controls button{min-width:112px;min-height:44px;background:#3a424c;border-color:#56616d;font-weight:700}
+  .console-hint{font-size:12px;color:var(--muted)}
   .tablet-actions button{min-height:64px;font-size:clamp(17px,2.2vw,21px);font-weight:750}
   .tablet-actions #tabletMainAction{min-height:72px;font-size:clamp(21px,2.6vw,27px);background:#28694d;border:2px solid #469a70}
   .tablet-actions #tabletMainAction.pass-mode{background:#b96b27;border-color:#df914b}
@@ -43,6 +48,7 @@
 <div class="nextline" id="nextLine">次駅 <strong>尾張一宮</strong></div>
 <div class="tablet-timeline" id="tabletTimeline" aria-live="polite"></div>
 <div class="tablet-actions" id="tabletActions"><button id="tabletBack">戻る</button><button id="tabletAdvance">進む</button><button class="tablet-primary" id="tabletMainAction">停車</button></div>
+<div class="tablet-console" id="tabletConsole"><div class="console-title">操作板</div><div class="console-controls"><button id="tabletReset">リセット</button><span class="console-hint" id="tabletHint">停車駅では「発車」に切り替わります</span></div></div>
 <div class="actions"><button class="good" id="depart">出発</button><button id="arrive">停車・到着</button><button id="pass">通過</button><button class="primary" id="advance">次駅へ進む</button><button id="back">1駅戻る</button><button id="reset">リセット</button></div></section>
 <div class="status" id="status"></div><footer class="footer">本アプリは個人制作の非公式な趣味・シミュレーション用です。実在の鉄道会社・鉄道事業者とは関係ありません。表示内容はサンプルまたは利用者が入力した情報であり、実際の運行情報ではありません。実際の鉄道運行・乗務・運転取扱い・保安装置の代用には絶対に使用しないでください。データはこのブラウザ内に保存され、別端末とは自動同期されません。</footer>
 </main><script>
@@ -64,8 +70,8 @@ function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const
  if(next<stations.length){const s=stations[next];html+='<div class="timeline-row next"><span class="timeline-label">次駅<br>'+ (s.stop==="通過"?"通過":"停車")+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
  const here=stations[current];html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div><span class="timeline-kind">'+(here.stop==="通過"?"通過":state==="運転中"?"走行中":"停車中")+'</span><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong></div></div>';
  el.innerHTML=html;
- const target=stations[next];const action=$("tabletMainAction");if(target&&target.stop==="通過"){action.textContent="通過";action.classList.add("pass-mode")}else{action.textContent="停車";action.classList.remove("pass-mode")}action.disabled=!target;
- $("tabletBack").disabled=current<=0;$("tabletAdvance").disabled=current>=stations.length-1;
+ const target=stations[next];const action=$("tabletMainAction");if(state==="停車中"){action.textContent="発車";action.classList.remove("pass-mode");action.disabled=current>=stations.length-1}else if(target&&target.stop==="通過"){action.textContent="通過";action.classList.add("pass-mode");action.disabled=false}else{action.textContent="停車";action.classList.remove("pass-mode");action.disabled=!target}
+ $("tabletBack").disabled=current<=0;$("tabletAdvance").disabled=current>=stations.length-1;$("tabletHint").textContent=state==="停車中"?"停車中：発車ボタンで次駅へ進みます":target?(target.stop==="通過"?"次駅は通過駅です":"次駅で停車できます"):"終点です";
 }
 function msg(t){$("status").textContent=t}
 $("depart").onclick=()=>{if(idx>=d.stations.length-1){state="終点";render();msg("終点のため次駅はありません");return}idx++;state="運転中";render();msg(d.stations[idx].name+" を次駅として表示中")};
@@ -75,8 +81,12 @@ $("advance").onclick=()=>{if(idx<d.stations.length-1){idx++;state=d.stations[idx
 $("back").onclick=()=>{idx=Math.max(0,idx-1);state="停車中";render();msg("1駅戻りました")};
 $("reset").onclick=()=>{idx=0;state="停車中";seconds=0;render();msg("リセットしました")};
 $("tabletBack").onclick=()=>{$("back").click()};
+$("tabletReset").onclick=()=>{$("reset").click()};
 $("tabletAdvance").onclick=()=>{$("depart").click()};
-$("tabletMainAction").onclick=()=>{const target=state==="運転中"?idx:idx+1;if(target>=d.stations.length)return;idx=target;if(d.stations[idx].stop==="通過"){state="通過";render();msg(d.stations[idx].name+" を通過しました")}else{state="停車中";seconds=0;last=Date.now();$("clock").textContent="00:00:00";render();msg(d.stations[idx].name+" に停車しました")}};
+$("tabletMainAction").onclick=()=>{if(state==="停車中"){if(idx>=d.stations.length-1)return;idx++;state="運転中";render();msg(d.stations[idx].name+" に向けて発車しました");return}
+ if(idx>=d.stations.length)return;
+ const target=d.stations[idx];
+ if(target.stop==="通過"){const passed=target.name;idx=Math.min(idx+1,d.stations.length-1);state="運転中";render();msg(passed+" を通過しました")}else{state="停車中";seconds=0;last=Date.now();$("clock").textContent="00:00:00";render();msg(target.name+" に停車しました")}};
 window.addEventListener("resize",()=>{if(tabletPortrait())renderTabletTimeline()});
 
 
