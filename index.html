@@ -79,6 +79,7 @@
 </main><script>
 const initial={train:"0000A",kind:"普通",dest:"名古屋",line:"東海道本線 / 下り",stations:[{name:"岐阜",arr:"",dep:"10:00",stop:"停車"},{name:"木曽川",arr:"10:05",dep:"10:06",stop:"停車"},{name:"尾張一宮",arr:"10:10",dep:"10:11",stop:"停車"},{name:"稲沢",arr:"10:15",dep:"10:16",stop:"停車"},{name:"清洲",arr:"10:20",dep:"10:21",stop:"停車"},{name:"枇杷島",arr:"10:24",dep:"10:25",stop:"停車"},{name:"名古屋",arr:"10:29",dep:"",stop:"停車"}]};
 let d=JSON.parse(localStorage.getItem("staff")||"null")||initial,idx=0,state="停車中",delay=Number(localStorage.getItem("staffDelay")||0),seconds=0,last=Date.now();
+const displayCount=()=>Math.max(2,Math.min(20,Math.floor(Number(d.displayCount)||5)));
 const $=id=>document.getElementById(id);
 function plus(t,m){if(!t)return "—";let [h,n]=t.split(":").map(Number),v=(h*60+n+m+14400)%1440;return String(v/60|0).padStart(2,"0")+":"+String(v%60).padStart(2,"0")}
 function render(){const a=d.stations[idx],b=d.stations[idx+1];$("trainNo").textContent=d.train||"—";$("kind").textContent=d.kind||"—";$("dest").textContent=d.dest||"—";$("line").textContent=d.line||"—";$("cars").textContent=d.cars?(/両$/.test(String(d.cars))?String(d.cars):String(d.cars)+"両"):"未設定";$("progress").textContent=(d.stations.length?idx+1:0)+" / "+d.stations.length+" 駅";$("state").textContent=state;$("stationLabel").textContent=state==="運転中"||state==="通過"?"次駅":"現在駅";$("stationName").textContent=a?.name||"—";$("stationTime").textContent=a?(a.stop==="通過"?((a.arr||a.dep)?"通 "+plus(a.arr||a.dep,delay):"時刻未設定"):(state==="運転中"?(a.arr?"着 "+plus(a.arr,delay):a.dep?"発 "+plus(a.dep,delay):"時刻未設定"):(a.dep?"発 "+plus(a.dep,delay):a.arr?"着 "+plus(a.arr,delay):"時刻未設定"))):"—";$("mainStation").classList.toggle("arrived",state!=="運転中"&&state!=="通過");$("nextLine").innerHTML=b?'次駅 <strong>'+escapeHtml(b.name)+'</strong>':"次駅 <strong>終点</strong>";renderTabletTimeline();}
@@ -88,8 +89,8 @@ function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const
  const isRunning=state==="運転中"||state==="通過";
  const current=Math.max(0,Math.min(isRunning?idx-1:idx,stations.length-1));
  const next=current+1;
- const maxRows=Math.max(3,Math.floor((window.innerHeight-470)/70)+2);
- const futureCount=Math.max(0,maxRows-2);
+ const maxRows=displayCount();
+ const futureCount=Math.max(0,maxRows-(isRunning?1:2));
  const futureEnd=Math.min(stations.length-1,next+futureCount-1);
  let html="";
  for(let i=futureEnd;i>next;i--){const s=stations[i];const pass=s.stop==="通過";html+='<div class="timeline-row"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過駅":"停車駅")+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
