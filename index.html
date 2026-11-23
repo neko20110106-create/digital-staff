@@ -19,6 +19,16 @@
   .timeline-station{font-size:clamp(21px,3vw,29px);font-weight:800;line-height:1.2;overflow-wrap:anywhere}
   .timeline-kind{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
   .timeline-row.current{border:2px solid #478765;background:#19251f;min-height:100px}
+  .timeline-row.next{border:1px solid var(--line);background:#20262d;min-height:62px}
+  .timeline-row.next .timeline-station{font-size:clamp(21px,3vw,29px);font-weight:800}
+  .timeline-row.next.running-next{border:2px solid #d98b5c;background:#30251f;min-height:112px}
+  .timeline-row.next.running-next .timeline-station{font-size:clamp(36px,5.5vw,52px);font-weight:850}
+  .timeline-row.next.running-next .timeline-kind{font-size:14px}
+  .timeline-row.next.stopped-next{border:1px solid var(--line);background:#20262d;min-height:62px}
+  .timeline-row.next.stopped-next .timeline-station{font-size:clamp(21px,3vw,29px)}
+  .timeline-label.kind-stop,.timeline-label.kind-pass{display:inline-flex;align-items:center;justify-content:center;width:max-content;min-width:76px;padding:7px 9px;border-radius:8px;font-size:13px;font-weight:850}
+  .timeline-label.kind-stop{color:#b9e8cc;background:#214b37;border:1px solid #478765}
+  .timeline-label.kind-pass{color:#ffd1a8;background:#57351f;border:1px solid #b96b27}
   .timeline-row.next{border:1px solid var(--line);background:#20262d;min-height:100px}
   .timeline-row.current .timeline-station,.timeline-row.next .timeline-station{font-size:clamp(32px,5vw,48px);font-weight:850}
   .timeline-row.current .timeline-kind,.timeline-row.next .timeline-kind{font-size:14px}
@@ -70,12 +80,12 @@ function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const
  const futureCount=Math.max(0,maxRows-2);
  const futureEnd=Math.min(stations.length-1,next+futureCount-1);
  let html="";
- for(let i=futureEnd;i>next;i--){const s=stations[i];const kind=s.stop==="通過"?"通過":"停車";html+='<div class="timeline-row"><span class="timeline-label">'+kind+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
- if(next<stations.length){const s=stations[next];html+='<div class="timeline-row next"><span class="timeline-label">次駅<br>'+(s.stop==="通過"?"通過":"停車")+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
- if(!isRunning){const here=stations[current];html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div><span class="timeline-kind">'+(here.stop==="通過"?"通過":"停車中")+'</span><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong></div></div>'}
+ for(let i=futureEnd;i>next;i--){const s=stations[i];const pass=s.stop==="通過";html+='<div class="timeline-row"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過駅":"停車駅")+'</span><div><span class="timeline-kind">'+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
+ if(next<stations.length){const s=stations[next];const pass=s.stop==="通過";html+='<div class="timeline-row next '+(isRunning?"running-next":"stopped-next")+'"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過駅":"停車駅")+'</span><div><span class="timeline-kind">次駅 · '+(pass?"通過":"停車")+' · '+(s.arr?"着 "+plus(s.arr,delay):s.dep?"発 "+plus(s.dep,delay):"時刻未設定")+'</span><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong></div></div>'}
+ if(!isRunning){const here=stations[current];html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div><span class="timeline-kind">停車中</span><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong></div></div>'}
  el.innerHTML=html;
  const target=stations[next];const action=$("tabletMainAction");if(state==="停車中"){action.textContent="発車";action.classList.remove("pass-mode");action.disabled=current>=stations.length-1}else if(target&&target.stop==="通過"){action.textContent="通過";action.classList.add("pass-mode");action.disabled=false}else{action.textContent="停車";action.classList.remove("pass-mode");action.disabled=!target}
- $("tabletBack").disabled=current<=0;$("tabletAdvance").disabled=current>=stations.length-1;$("tabletHint").textContent=state==="停車中"?"停車中：発車ボタンで次駅へ進みます":target?(target.stop==="通過"?"次駅は通過駅です":"次駅で停車できます"):"終点です";
+ $("tabletBack").disabled=current<=0;$("tabletAdvance").disabled=current>=stations.length-1;$("tabletHint").textContent=state==="停車中"?"停車中：次駅を確認して「発車」":target?(target.stop==="通過"?"次駅は通過駅です":"次駅は停車駅です"):"終点です";
 }
 function msg(t){$("status").textContent=t}
 $("depart").onclick=()=>{if(idx>=d.stations.length-1){state="終点";render();msg("終点のため次駅はありません");return}idx++;state="運転中";render();msg(d.stations[idx].name+" を次駅として表示中")};
