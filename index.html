@@ -164,7 +164,7 @@ $("arrive").onclick=()=>{state="停車中";seconds=0;last=Date.now();$("clock").
 $("pass").onclick=()=>{if(idx>=d.stations.length){state="終点";render();msg("終点のため通過できる駅はありません");return}const passed=d.stations[idx]?.name||"駅";if(idx<d.stations.length-1){idx++;state="通過";render();msg(passed+" を通過扱いにしました。次駅："+d.stations[idx].name)}else{state="終点";render();msg(passed+" を通過扱いにしました。終点です")}};
 $("advance").onclick=()=>{if(idx<d.stations.length-1){idx++;state=d.stations[idx].stop==="通過"?"通過":"停車中";render();msg("次駅へ進みました")}else msg("終点です")};
 $("back").onclick=()=>{idx=Math.max(0,idx-1);state="停車中";render();msg("1駅戻りました")};
-$("reset").onclick=()=>{idx=0;state="停車中";seconds=0;started=false;localStorage.removeItem("staffRunActive");last=Date.now();$("clock").textContent="00:00:00";$("tabletBack").disabled=false;$("tabletAdvance").disabled=false;$("tabletMainAction").disabled=false;render();msg("リセットしました")};
+$("reset").onclick=()=>{idx=0;state="停車中";seconds=0;last=Date.now();if(started)localStorage.setItem("staffRunActive","true");else localStorage.removeItem("staffRunActive");$("clock").textContent="00:00:00";$("tabletBack").disabled=false;$("tabletAdvance").disabled=false;$("tabletMainAction").disabled=false;render();msg("リセットしました")};
 
 $("tabletBack").onclick=()=>{$("back").click()};const finishRun=()=>{started=false;localStorage.removeItem("staffRunActive");pageTransitionTo("settings.html")};$("endRun").onclick=finishRun;$("headerEndRun").onclick=finishRun;$("headerReset").onclick=()=>$("reset").click();
 $("tabletReset").onclick=()=>{$("reset").click()};
