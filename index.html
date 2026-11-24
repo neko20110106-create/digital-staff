@@ -59,6 +59,18 @@
   .timeline-row>div{min-width:0;max-width:100%}.timeline-info{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;min-width:0}.timeline-info .timeline-kind{white-space:nowrap;font-size:clamp(13px,1.8vw,17px);font-weight:750}.timeline-info .timeline-time{white-space:nowrap;font-size:clamp(25px,4.2vw,39px);font-weight:850;line-height:1.05;font-variant-numeric:tabular-nums;color:#f4f6f8}
   .timeline-station{display:block;min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:normal}
 }
+/* Station transitions and operation-state border accents */
+@keyframes stationFadeIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes departBorder{0%{border-color:#d98b5c;box-shadow:0 0 0 0 rgba(217,139,92,0)}35%{border-color:#ffad70;box-shadow:0 0 0 4px rgba(217,139,92,.22)}100%{border-color:#d98b5c;box-shadow:0 0 0 0 rgba(217,139,92,0)}}
+@keyframes stopBorder{0%{border-color:#478765;box-shadow:0 0 0 0 rgba(71,135,101,0)}35%{border-color:#80d5a7;box-shadow:0 0 0 4px rgba(71,135,101,.22)}100%{border-color:#478765;box-shadow:0 0 0 0 rgba(71,135,101,0)}}
+.station-name.station-fade,.timeline-station{animation:stationFadeIn .32s ease-out both}
+.timeline-row.next.running-next{animation:departBorder .7s ease-out}
+.timeline-row.current{animation:stopBorder .7s ease-out}
+.mainstation.depart-flash{animation:departBorder .7s ease-out}
+.mainstation.stop-flash{animation:stopBorder .7s ease-out}
+@media(prefers-reduced-motion:reduce){
+ .station-name.station-fade,.timeline-station,.timeline-row.next.running-next,.timeline-row.current,.mainstation.depart-flash,.mainstation.stop-flash{animation:none!important}
+}
 /* iPad portrait: use the available vertical space instead of leaving a large blank area */
 @media (min-width:700px) and (orientation:portrait) and (min-height:800px){
   body{min-height:100vh;min-height:100dvh}
@@ -106,7 +118,8 @@ const displayCount=()=>{const saved=localStorage.getItem("staffDisplayCount");co
 const $=id=>document.getElementById(id);
 function plus(t,m){if(!t)return "";let [h,n,s=0]=t.split(":").map(Number);const total=(h*60+n+m+14400)%1440;return (total/60|0)+":"+String(total%60).padStart(2,"0")+":"+String(s||0).padStart(2,"0")}function stationTimeText(s,mode){if(!s)return "";const t=s.stop==="通過"?(s.arr||s.dep):(mode==="arr"?(s.arr||s.dep):mode==="dep"?(s.dep||s.arr):(s.dep||s.arr));if(!t)return "";return (s.stop==="通過"?"通 ":mode==="arr"?"着 ":"発 ")+plus(t,delay)}
 function timelineTimeText(s,mode){const value=stationTimeText(s,mode);return value.replace(/^通 /,"")}
-function render(){const a=d.stations[idx],b=d.stations[idx+1];$("trainNo").textContent=d.train||"—";$("kind").textContent=d.kind||"—";$("dest").textContent=d.dest||"—";$("line").textContent=d.line||"—";$("cars").textContent=d.cars?(/両$/.test(String(d.cars))?String(d.cars):String(d.cars)+"両"):"未設定";$("progress").textContent=(d.stations.length?idx+1:0)+" / "+d.stations.length+" 駅";$("state").textContent=state;$("stationLabel").textContent=state==="運転中"||state==="通過"?"次駅":"現在駅";$("stationName").textContent=a?.name||"—";$("stationTime").textContent=a?stationTimeText(a,state==="運転中"?"arr":"dep"):"";$("mainStation").classList.toggle("arrived",state!=="運転中"&&state!=="通過");$("nextLine").innerHTML=b?'次駅 <strong>'+escapeHtml(b.name)+'</strong>':"次駅 <strong>終点</strong>";renderTabletTimeline();}
+let previousRenderState=null;function replayAnimation(el,cls){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls)}
+function render(){const a=d.stations[idx],b=d.stations[idx+1];$("trainNo").textContent=d.train||"—";$("kind").textContent=d.kind||"—";$("dest").textContent=d.dest||"—";$("line").textContent=d.line||"—";$("cars").textContent=d.cars?(/両$/.test(String(d.cars))?String(d.cars):String(d.cars)+"両"):"未設定";$("progress").textContent=(d.stations.length?idx+1:0)+" / "+d.stations.length+" 駅";$("state").textContent=state;$("stationLabel").textContent=state==="運転中"||state==="通過"?"次駅":"現在駅";$("stationName").textContent=a?.name||"—";$("stationTime").textContent=a?stationTimeText(a,state==="運転中"?"arr":"dep"):"";$("mainStation").classList.toggle("arrived",state!=="運転中"&&state!=="通過");if(previousRenderState!==null&&previousRenderState!==state){replayAnimation($("mainStation"),state==="運転中"||state==="通過"?"depart-flash":"stop-flash");replayAnimation($("stationName"),"station-fade")}previousRenderState=state;$("nextLine").innerHTML=b?'次駅 <strong>'+escapeHtml(b.name)+'</strong>':"次駅 <strong>終点</strong>";renderTabletTimeline();}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function tabletPortrait(){return window.matchMedia("(orientation:landscape), (max-width:699px), (min-width:700px) and (max-width:1300px) and (orientation:portrait)").matches}
 function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const stations=d.stations||[];if(!stations.length){el.innerHTML='<div class="timeline-row current"><span class="timeline-label">現在地</span><strong class="timeline-station">—</strong></div>';return}
