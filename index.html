@@ -139,8 +139,10 @@ function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const
  const futureCount=Math.max(1,maxRows-(isRunning?0:1));
  const futureEnd=Math.min(stations.length-1,next+futureCount-1);
  let html="";
- for(let i=futureEnd;i>next;i--){const s=stations[i];const pass=s.stop==="通過";const time=timelineTimeText(s,"arr");html+='<div class="timeline-row"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過":"停車")+'</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong>'+(time?'<span class="timeline-kind">'+time+'</span>':"")+'</div></div>';html+='<div class="timeline-track" aria-hidden="true"></div>'}
+ for(let i=futureEnd;i>next;i--){const s=stations[i];const pass=s.stop==="通過";const time=timelineTimeText(s,"arr");html+='<div class="timeline-row"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過":"停車")+'</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong>'+(time?'<span class="timeline-kind">'+time+'</span>':"")+'</div></div>'}
+ if(isRunning&&futureEnd>next){html+='<div class="timeline-track" aria-hidden="true"></div>'}
  if(next<stations.length){const s=stations[next];const pass=s.stop==="通過";const time=timelineTimeText(s,"arr");html+='<div class="timeline-row next '+(isRunning?"running-next":"stopped-next")+'"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過":"停車")+'</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong>'+(time?'<span class="timeline-time">'+time+'</span>':"")+'</div></div>'}
+ if(!isRunning&&next<stations.length){html+='<div class="timeline-track" aria-hidden="true"></div>'}
  if(!isRunning&&next<stations.length){html+='<div class="timeline-track" aria-hidden="true"></div>'}
  if(!isRunning){const here=stations[current];const time=stationTimeText(here,"dep");html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong>'+(time?'<span class="timeline-time">'+time+'</span>':"")+'</div></div>'}
  el.innerHTML=html;
