@@ -77,9 +77,13 @@
   .timeline-row.next .timeline-station,
   .timeline-row.next.running-next .timeline-station,
   .timeline-row.next.stopped-next .timeline-station{font-size:clamp(26px,6.5vw,30px);line-height:1.2;min-width:0;max-width:100%;overflow-wrap:anywhere}
-  .timeline-row.current .timeline-info{flex-direction:column;align-items:flex-start;flex-wrap:nowrap;gap:5px}
-  .timeline-row.current .timeline-station{font-size:clamp(36px,5.2vw,54px);line-height:1.2;min-width:0;max-width:100%;overflow-wrap:anywhere}
-  .timeline-row.current .timeline-time{font-size:clamp(23px,4vw,30px);line-height:1.15}
+  /* Current location is deliberately stacked; next station stays on one line where possible. */
+  .timeline-row.current .timeline-info{display:flex;flex-direction:column;align-items:flex-start;flex-wrap:nowrap;gap:5px;width:100%}
+  .timeline-row.current .timeline-station{display:block;font-size:clamp(36px,5.2vw,54px);line-height:1.2;min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .timeline-row.current .timeline-time{display:block;font-size:clamp(23px,4vw,30px);line-height:1.15}
+  .timeline-row.next .timeline-info{display:flex;flex-direction:row;align-items:baseline;flex-wrap:wrap;gap:4px 8px;width:100%}
+  .timeline-row.next .timeline-station{font-size:clamp(26px,6.5vw,30px);line-height:1.2}
+  .timeline-row.next .timeline-time{font-size:clamp(14px,3.7vw,18px);line-height:1.2}
   .timeline-info .timeline-kind,
   .timeline-info .timeline-time{white-space:normal;overflow-wrap:anywhere;min-width:0}
 }
