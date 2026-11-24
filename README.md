@@ -4,8 +4,7 @@
 
 ## アプリ
 
-- **運転画面:** https://neko20110106-create.github.io/digital-staff/
-- **設定・スタフ編集:** https://neko20110106-create.github.io/digital-staff/settings.html
+- **リンク:** https://neko20110106-create.github.io/digital-staff/settings.html
 
 ## 基本的な使い方
 
