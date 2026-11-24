@@ -129,7 +129,7 @@ body:not(.anim-clock) .clock.clock-tick{animation:none!important}
 applyAnimationPrefs();
 document.body.classList.toggle("animations-off",!animationsEnabled());
 
-const initial={train:"0000A",kind:"普通",dest:"名古屋",line:"東海道本線 / 下り",stations:[{name:"岐阜",arr:"",dep:"10:00",stop:"停車"},{name:"木曽川",arr:"10:05",dep:"10:06",stop:"停車"},{name:"尾張一宮",arr:"10:10",dep:"10:11",stop:"停車"},{name:"稲沢",arr:"10:15",dep:"10:16",stop:"停車"},{name:"清洲",arr:"10:20",dep:"10:21",stop:"停車"},{name:"枇杷島",arr:"10:24",dep:"10:25",stop:"停車"},{name:"名古屋",arr:"10:29",dep:"",stop:"停車"}]};
+const initial={train:"0000A",kind:"普通",dest:"大船",line:"東海道本線 / 下り",stations:[{"name":"東京","arr":"","dep":"08:12","stop":"停車"},{"name":"新橋","arr":"08:15","dep":"08:15","stop":"停車"},{"name":"品川","arr":"08:20","dep":"08:20","stop":"停車"},{"name":"川崎","arr":"08:29","dep":"08:29","stop":"停車"},{"name":"横浜","arr":"08:32","dep":"08:33","stop":"停車"},{"name":"戸塚","arr":"08:45","dep":"08:45","stop":"停車"},{"name":"大船","arr":"08:51","dep":"","stop":"停車"}]};
 let d=JSON.parse(localStorage.getItem("staff")||"null")||initial,idx=0,state="停車中",delay=Number(localStorage.getItem("staffDelay")||0),seconds=0,last=Date.now(),started=localStorage.getItem("staffRunActive")==="true";
 const displayCount=()=>{const saved=localStorage.getItem("staffDisplayCount");const value=saved===null?d.displayCount:Number(saved);return Math.max(2,Math.min(20,Math.floor(Number(value)||5)))};
 const $=id=>document.getElementById(id);
