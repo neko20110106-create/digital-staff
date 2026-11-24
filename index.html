@@ -19,8 +19,8 @@
   .timeline-station{font-size:clamp(21px,3vw,29px);font-weight:800;line-height:1.2;overflow-wrap:anywhere}
   .timeline-kind{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
   .timeline-row.current{border:2px solid #478765;background:#19251f;min-height:112px}
-  .timeline-track{height:26px;flex:0 0 26px;display:flex;justify-content:center;align-items:stretch;pointer-events:none}
-  .timeline-track::before{content:"";display:block;width:9px;border-radius:99px;background:rgba(220,230,238,.16);box-shadow:inset 2px 0 rgba(255,255,255,.045),inset -2px 0 rgba(0,0,0,.025)}
+  .timeline-track{height:30px;flex:0 0 30px;display:flex;justify-content:center;align-items:center;gap:8px;pointer-events:none}
+  .timeline-track::before{content:"";display:block;width:9px;height:100%;border-radius:99px;background:rgba(220,230,238,.16);box-shadow:inset 2px 0 rgba(255,255,255,.045),inset -2px 0 rgba(0,0,0,.025)}.timeline-slow-sign{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:24px;padding:0 5px;border:2px solid #e3c34f;border-radius:3px;background:#f3df83;color:#25231a;font-size:13px;font-weight:900;line-height:1;letter-spacing:.04em;box-shadow:0 1px 3px #0008}
   .timeline-row.next{border:1px solid var(--line);background:#20262d;min-height:62px}
   .timeline-row.next .timeline-station{font-size:clamp(21px,3vw,29px);font-weight:800}
   .timeline-row.next.running-next{border:2px solid #d98b5c;background:#30251f;min-height:112px}
@@ -140,9 +140,9 @@ function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const
  const futureEnd=Math.min(stations.length-1,next+futureCount-1);
  let html="";
  for(let i=futureEnd;i>next;i--){const s=stations[i];const pass=s.stop==="通過";const time=timelineTimeText(s,"arr");html+='<div class="timeline-row"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過":"停車")+'</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong>'+(time?'<span class="timeline-kind">'+time+'</span>':"")+'</div></div>'}
- if(isRunning&&futureEnd>next){html+='<div class="timeline-track" aria-hidden="true"></div>'}
+ if(isRunning&&futureEnd>next){html+='<div class="timeline-track" aria-hidden="true"><span class="timeline-slow-sign" '+(stations[next]?.slow===true?"":"hidden")+' >徐行</span></div>'}
  if(next<stations.length){const s=stations[next];const pass=s.stop==="通過";const time=timelineTimeText(s,"arr");html+='<div class="timeline-row next '+(isRunning?"running-next":"stopped-next")+'"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過":"停車")+'</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong>'+(time?'<span class="timeline-time">'+time+'</span>':"")+'</div></div>'}
- if(!isRunning&&next<stations.length){html+='<div class="timeline-track" aria-hidden="true"></div>'}
+ if(!isRunning&&next<stations.length){html+='<div class="timeline-track" aria-hidden="true"><span class="timeline-slow-sign" '+(stations[next]?.slow===true?"":"hidden")+' >徐行</span></div>'}
  if(!isRunning){const here=stations[current];const time=stationTimeText(here,"dep");html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong>'+(time?'<span class="timeline-time">'+time+'</span>':"")+'</div></div>'}
  el.innerHTML=html;
  const target=stations[next];const action=$("tabletMainAction");if(state==="停車中"&&idx>=stations.length-1){action.textContent="運転終了";action.classList.remove("pass-mode");action.classList.add("end-mode");action.disabled=false}else if(state==="停車中"){action.textContent="発車";action.classList.remove("pass-mode","end-mode");action.disabled=current>=stations.length-1}else if(target&&target.stop==="通過"){action.textContent="通過";action.classList.remove("end-mode");action.classList.add("pass-mode");action.disabled=false}else{action.textContent="停車";action.classList.remove("pass-mode","end-mode");action.disabled=!target}
