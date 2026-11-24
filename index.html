@@ -130,7 +130,7 @@ applyAnimationPrefs();
 document.body.classList.toggle("animations-off",!animationsEnabled());
 
 const initial={train:"0000A",kind:"普通",dest:"名古屋",line:"東海道本線 / 下り",stations:[{name:"岐阜",arr:"",dep:"10:00",stop:"停車"},{name:"木曽川",arr:"10:05",dep:"10:06",stop:"停車"},{name:"尾張一宮",arr:"10:10",dep:"10:11",stop:"停車"},{name:"稲沢",arr:"10:15",dep:"10:16",stop:"停車"},{name:"清洲",arr:"10:20",dep:"10:21",stop:"停車"},{name:"枇杷島",arr:"10:24",dep:"10:25",stop:"停車"},{name:"名古屋",arr:"10:29",dep:"",stop:"停車"}]};
-let d=JSON.parse(localStorage.getItem("staff")||"null")||initial,idx=0,state="停車中",delay=Number(localStorage.getItem("staffDelay")||0),seconds=0,last=Date.now(),started=false;
+let d=JSON.parse(localStorage.getItem("staff")||"null")||initial,idx=0,state="停車中",delay=Number(localStorage.getItem("staffDelay")||0),seconds=0,last=Date.now(),started=localStorage.getItem("staffRunActive")==="true";
 const displayCount=()=>{const saved=localStorage.getItem("staffDisplayCount");const value=saved===null?d.displayCount:Number(saved);return Math.max(2,Math.min(20,Math.floor(Number(value)||5)))};
 const $=id=>document.getElementById(id);
 function plus(t,m){if(!t)return "";let [h,n,s=0]=t.split(":").map(Number);const total=(h*60+n+m+14400)%1440;return (total/60|0)+":"+String(total%60).padStart(2,"0")+":"+String(s||0).padStart(2,"0")}function stationTimeText(s,mode){if(!s)return "";const t=s.stop==="通過"?(s.arr||s.dep):(mode==="arr"?(s.arr||s.dep):mode==="dep"?(s.dep||s.arr):(s.dep||s.arr));if(!t)return "";return (s.stop==="通過"?"通 ":mode==="arr"?"着 ":"発 ")+plus(t,delay)}
@@ -162,12 +162,12 @@ $("arrive").onclick=()=>{state="停車中";seconds=0;last=Date.now();$("clock").
 $("pass").onclick=()=>{if(idx>=d.stations.length){state="終点";render();msg("終点のため通過できる駅はありません");return}const passed=d.stations[idx]?.name||"駅";if(idx<d.stations.length-1){idx++;state="通過";render();msg(passed+" を通過扱いにしました。次駅："+d.stations[idx].name)}else{state="終点";render();msg(passed+" を通過扱いにしました。終点です")}};
 $("advance").onclick=()=>{if(idx<d.stations.length-1){idx++;state=d.stations[idx].stop==="通過"?"通過":"停車中";render();msg("次駅へ進みました")}else msg("終点です")};
 $("back").onclick=()=>{idx=Math.max(0,idx-1);state="停車中";render();msg("1駅戻りました")};
-$("reset").onclick=()=>{idx=0;state="停車中";seconds=0;started=false;last=Date.now();$("clock").textContent="00:00:00";$("tabletBack").disabled=false;$("tabletAdvance").disabled=false;$("tabletMainAction").disabled=false;render();msg("リセットしました")};
+$("reset").onclick=()=>{idx=0;state="停車中";seconds=0;started=false;localStorage.removeItem("staffRunActive");last=Date.now();$("clock").textContent="00:00:00";$("tabletBack").disabled=false;$("tabletAdvance").disabled=false;$("tabletMainAction").disabled=false;render();msg("リセットしました")};
 
-$("tabletBack").onclick=()=>{$("back").click()};$("endRun").onclick=()=>{started=false;pageTransitionTo("settings.html")};
+$("tabletBack").onclick=()=>{$("back").click()};$("endRun").onclick=()=>{started=false;localStorage.removeItem("staffRunActive");pageTransitionTo("settings.html")};
 $("tabletReset").onclick=()=>{$("reset").click()};
 $("tabletAdvance").onclick=()=>{$("depart").click()};
-$("tabletMainAction").onclick=()=>{if(state==="停車中"&&idx>=d.stations.length-1){state="運転終了";started=false;msg("終点に到着しました。設定画面に戻ります");pageTransitionTo("settings.html");return}if(state==="停車中"){if(idx>=d.stations.length-1)return;idx++;state="運転中";render();msg(d.stations[idx].name+" に向けて発車しました");return}
+$("tabletMainAction").onclick=()=>{if(state==="停車中"&&idx>=d.stations.length-1){state="運転終了";started=false;localStorage.removeItem("staffRunActive");msg("終点に到着しました。設定画面に戻ります");pageTransitionTo("settings.html");return}if(state==="停車中"){if(idx>=d.stations.length-1)return;idx++;state="運転中";render();msg(d.stations[idx].name+" に向けて発車しました");return}
  if(idx>=d.stations.length)return;
  const target=d.stations[idx];
  if(target.stop==="通過"){const passed=target.name;idx=Math.min(idx+1,d.stations.length-1);state="運転中";render();msg(passed+" を通過しました")}else{state="停車中";seconds=0;last=Date.now();$("clock").textContent="00:00:00";render();msg(target.name+" に停車しました")}};
