@@ -48,14 +48,14 @@
   .timeline-row.next.running-next .timeline-station{font-size:clamp(30px,5vw,48px);font-weight:850}
   .timeline-row.next.stopped-next{border:1px solid var(--line);background:#20262d;min-height:62px}
   .timeline-row.next.stopped-next .timeline-station{font-size:clamp(19px,3vw,28px)}
-  .timeline-row.current .timeline-station{font-size:clamp(31px,4.5vw,44px)}
+  .timeline-row.current .timeline-station{font-size:clamp(36px,5.2vw,54px)}.timeline-row.current .timeline-time{font-size:clamp(27px,4.5vw,42px)}
   .trainbar{gap:8px 14px}
   .tablet-actions{width:min(calc(100% - 20px),1018px);gap:7px}
   .tablet-actions button{padding:10px 8px;min-height:56px}
   .tablet-console{margin-bottom:14px}
   .tablet-actions #tabletMainAction{min-height:62px}
   .timeline-row{grid-template-columns:100px minmax(0,1fr)}
-  .timeline-row>div{min-width:0;max-width:100%}.timeline-info{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;min-width:0}.timeline-info .timeline-kind{white-space:nowrap;font-size:clamp(13px,1.8vw,17px);font-weight:750}
+  .timeline-row>div{min-width:0;max-width:100%}.timeline-info{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;min-width:0}.timeline-info .timeline-kind{white-space:nowrap;font-size:clamp(13px,1.8vw,17px);font-weight:750}.timeline-info .timeline-time{white-space:nowrap;font-size:clamp(25px,4.2vw,39px);font-weight:850;line-height:1.05;font-variant-numeric:tabular-nums;color:#f4f6f8}
   .timeline-station{display:block;min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:normal}
 }
 /* iPad portrait: use the available vertical space instead of leaving a large blank area */
@@ -97,8 +97,8 @@ function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const
  const futureEnd=Math.min(stations.length-1,next+futureCount-1);
  let html="";
  for(let i=futureEnd;i>next;i--){const s=stations[i];const pass=s.stop==="通過";const time=stationTimeText(s,"arr");html+='<div class="timeline-row"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過":"停車")+'</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong>'+(time?'<span class="timeline-kind">'+time+'</span>':"")+'</div></div>'}
- if(next<stations.length){const s=stations[next];const pass=s.stop==="通過";const time=stationTimeText(s,"arr");html+='<div class="timeline-row next '+(isRunning?"running-next":"stopped-next")+'"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過":"停車")+'</span><div><span class="timeline-kind">次駅 · '+(pass?"通過":"停車")+'</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong>'+(time?'<span class="timeline-kind">'+time+'</span>':"")+'</div></div></div>'}
- if(!isRunning){const here=stations[current];const time=stationTimeText(here,"dep");html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div><span class="timeline-kind">停車中</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong>'+(time?'<span class="timeline-kind">'+time+'</span>':"")+'</div></div></div>'}
+ if(next<stations.length){const s=stations[next];const pass=s.stop==="通過";const time=stationTimeText(s,"arr");html+='<div class="timeline-row next '+(isRunning?"running-next":"stopped-next")+'"><span class="timeline-label '+(pass?"kind-pass":"kind-stop")+'">'+(pass?"通過":"停車")+'</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(s.name||"—")+'</strong>'+(time?'<span class="timeline-time">'+time+'</span>':"")+'</div></div>'}
+ if(!isRunning){const here=stations[current];const time=stationTimeText(here,"dep");html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div class="timeline-info"><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong>'+(time?'<span class="timeline-time">'+time+'</span>':"")+'</div></div>'}
  el.innerHTML=html;
  const target=stations[next];const action=$("tabletMainAction");if(state==="停車中"){action.textContent="発車";action.classList.remove("pass-mode");action.disabled=current>=stations.length-1}else if(target&&target.stop==="通過"){action.textContent="通過";action.classList.add("pass-mode");action.disabled=false}else{action.textContent="停車";action.classList.remove("pass-mode");action.disabled=!target}
  $("tabletBack").disabled=current<=0;$("tabletAdvance").disabled=current>=stations.length-1;$("tabletHint").textContent=state==="停車中"?"停車中：次駅を確認して「発車」":target?(target.stop==="通過"?"次駅は通過駅です":"次駅は停車駅です"):"終点です";
