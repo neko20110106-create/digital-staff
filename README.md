@@ -5,6 +5,7 @@
 ## アプリ
 
 - **リンク:** https://neko20110106-create.github.io/digital-staff/settings.html
+- 
 ※基本的にはタブレットの縦画面推奨です。
 
 ## 基本的な使い方
