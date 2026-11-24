@@ -106,6 +106,13 @@ body:not(.anim-clock) .clock.clock-tick{animation:none!important}
   .timeline-info .timeline-kind,
   .timeline-info .timeline-time{white-space:normal;overflow-wrap:anywhere;min-width:0}
 }
+
+/* Keep station names left-aligned; center only the time, with protection change at right */
+.timeline-row .timeline-info{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:6px 8px;width:100%;min-width:0}
+.timeline-row .timeline-main{display:contents}
+.timeline-row .timeline-main .timeline-station{grid-column:1;grid-row:1;justify-self:start;text-align:left;min-width:0}
+.timeline-row .timeline-main .timeline-time,.timeline-row .timeline-main .timeline-kind{grid-column:2;grid-row:1;justify-self:center;text-align:center;width:auto;white-space:nowrap}
+.timeline-row .timeline-info .protection-change{grid-column:3;grid-row:1;justify-self:end;margin-left:0}
 </style></head><body><main class="wrap">
 <header class="top"><div><div class="brandline"><span class="brand-title">電子スタフ</span><span class="pill">BETA版</span></div><div class="sub">手動操作型・端末内保存</div></div><a class="btn" href="settings.html">設定・スタフ編集 ⚙</a></header>
 <section class="trainbar" aria-label="列車情報"><div class="trainitem trainno"><small>列車番号</small><strong id="trainNo">123M</strong></div><div class="trainitem"><small>種別</small><strong id="kind">普通</strong></div><div class="trainitem"><small>行先</small><strong id="dest">名古屋</strong></div><div class="trainitem"><small>路線</small><strong id="line">東海道本線 / 下り</strong></div><div class="trainitem"><small>両数</small><strong id="cars">未設定</strong></div></section>
