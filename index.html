@@ -68,6 +68,18 @@
   .footer{margin-top:auto;padding-top:16px}
 }
 @media(max-width:600px){.wrap{padding:12px}.brand-title{font-size:clamp(21px,6vw,30px)}.brandline{gap:6px}.top .btn{padding:9px 10px;font-size:12px}.panel{padding:13px}.trainbar{padding:12px;gap:10px 16px}.trainitem{flex-wrap:wrap}.mainstation{min-height:190px}.actions button{min-width:calc(50% - 8px)}}
+
+/* Smartphone: keep station names prominent and prevent the time from overflowing */
+@media (max-width:600px){
+  .timeline-row{grid-template-columns:72px minmax(0,1fr);gap:8px;padding:9px 10px}
+  .timeline-info{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;min-width:0;width:100%}
+  .timeline-row .timeline-station,
+  .timeline-row.current .timeline-station,
+  .timeline-row.next .timeline-station,
+  .timeline-row.next.running-next .timeline-station{font-size:clamp(19px,5vw,23px);line-height:1.2;min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .timeline-info .timeline-kind,
+  .timeline-info .timeline-time{font-size:clamp(14px,3.7vw,18px);line-height:1.2;white-space:normal;overflow-wrap:anywhere;min-width:0}
+}
 </style></head><body><main class="wrap">
 <header class="top"><div><div class="brandline"><span class="brand-title">電子スタフ</span><span class="pill">BETA版</span></div><div class="sub">手動操作型・端末内保存</div></div><a class="btn" href="settings.html">設定・スタフ編集 ⚙</a></header>
 <section class="trainbar" aria-label="列車情報"><div class="trainitem trainno"><small>列車番号</small><strong id="trainNo">123M</strong></div><div class="trainitem"><small>種別</small><strong id="kind">普通</strong></div><div class="trainitem"><small>行先</small><strong id="dest">名古屋</strong></div><div class="trainitem"><small>路線</small><strong id="line">東海道本線 / 下り</strong></div><div class="trainitem"><small>両数</small><strong id="cars">未設定</strong></div></section>
