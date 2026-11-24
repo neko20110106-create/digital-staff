@@ -166,10 +166,10 @@ $("advance").onclick=()=>{if(idx<d.stations.length-1){idx++;state=d.stations[idx
 $("back").onclick=()=>{idx=Math.max(0,idx-1);state="停車中";render();msg("1駅戻りました")};
 $("reset").onclick=()=>{idx=0;state="停車中";seconds=0;last=Date.now();if(started)localStorage.setItem("staffRunActive","true");else localStorage.removeItem("staffRunActive");$("clock").textContent="00:00:00";$("tabletBack").disabled=false;$("tabletAdvance").disabled=false;$("tabletMainAction").disabled=false;render();msg("リセットしました")};
 
-$("tabletBack").onclick=()=>{$("back").click()};const finishRun=()=>{started=false;localStorage.removeItem("staffRunActive");pageTransitionTo("settings.html")};$("endRun").onclick=finishRun;$("headerEndRun").onclick=finishRun;$("headerReset").onclick=()=>$("reset").click();
+$("tabletBack").onclick=()=>{$("back").click()};const finishRun=()=>{if(!confirm("運転を終了して設定画面に戻りますか？"))return;started=false;localStorage.removeItem("staffRunActive");pageTransitionTo("settings.html")};$("endRun").onclick=finishRun;$("headerEndRun").onclick=finishRun;$("headerReset").onclick=()=>$("reset").click();
 $("tabletReset").onclick=()=>{$("reset").click()};
 $("tabletAdvance").onclick=()=>{$("depart").click()};
-$("tabletMainAction").onclick=()=>{if(state==="停車中"&&idx>=d.stations.length-1){state="運転終了";started=false;localStorage.removeItem("staffRunActive");msg("終点に到着しました。設定画面に戻ります");pageTransitionTo("settings.html");return}if(state==="停車中"){if(idx>=d.stations.length-1)return;idx++;state="運転中";render();msg(d.stations[idx].name+" に向けて発車しました");return}
+$("tabletMainAction").onclick=()=>{if(state==="停車中"&&idx>=d.stations.length-1){finishRun();return}if(state==="停車中"){if(idx>=d.stations.length-1)return;idx++;state="運転中";render();msg(d.stations[idx].name+" に向けて発車しました");return}
  if(idx>=d.stations.length)return;
  const target=d.stations[idx];
  if(target.stop==="通過"){const passed=target.name;idx=Math.min(idx+1,d.stations.length-1);state="運転中";render();msg(passed+" を通過しました")}else{state="停車中";seconds=0;last=Date.now();$("clock").textContent="00:00:00";render();msg(target.name+" に停車しました")}};
