@@ -73,13 +73,14 @@
 @media (max-width:600px){
   .timeline-row{grid-template-columns:72px minmax(0,1fr);gap:8px;padding:9px 10px}
   .timeline-info{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;min-width:0;width:100%}
-  .timeline-row .timeline-station,
-  .timeline-row.current .timeline-station,
+  .timeline-row .timeline-station{font-size:clamp(19px,5vw,23px);line-height:1.2;min-width:0;max-width:100%;overflow-wrap:anywhere}
   .timeline-row.next .timeline-station,
   .timeline-row.next.running-next .timeline-station,
-  .timeline-row.next.stopped-next .timeline-station{font-size:clamp(22px,5.6vw,26px);line-height:1.2;min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .timeline-row.next.stopped-next .timeline-station{font-size:clamp(26px,6.5vw,30px);line-height:1.2;min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .timeline-row.current .timeline-station{font-size:clamp(36px,5.2vw,54px);line-height:1.2;min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .timeline-row.current .timeline-time{font-size:clamp(27px,4.5vw,42px);line-height:1.05}
   .timeline-info .timeline-kind,
-  .timeline-info .timeline-time{font-size:clamp(14px,3.7vw,18px);line-height:1.2;white-space:normal;overflow-wrap:anywhere;min-width:0}
+  .timeline-info .timeline-time{white-space:normal;overflow-wrap:anywhere;min-width:0}
 }
 </style></head><body><main class="wrap">
 <header class="top"><div><div class="brandline"><span class="brand-title">電子スタフ</span><span class="pill">BETA版</span></div><div class="sub">手動操作型・端末内保存</div></div><a class="btn" href="settings.html">設定・スタフ編集 ⚙</a></header>
