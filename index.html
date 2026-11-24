@@ -7,13 +7,13 @@
 :root{color-scheme:dark;--bg:#15191e;--panel:#242a31;--panel2:#303841;--line:#46515c;--text:#f4f6f8;--muted:#aab3bc;--accent:#d98b5c;--green:#70c49a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,a{font:inherit}button,a.btn{border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);padding:12px 16px;text-decoration:none;cursor:pointer}.wrap{max-width:1050px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap}.top>div{min-width:0}.top .btn{white-space:nowrap;flex:0 0 auto;padding:10px 13px;font-size:clamp(12px,3.3vw,16px)}.brandline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.brand-title{font-size:clamp(24px,5vw,34px);font-weight:850;line-height:1.2}.pill{border:1px solid var(--line);border-radius:99px;padding:5px 10px;color:var(--muted);font-size:12px;white-space:nowrap}.sub,.muted{color:var(--muted);font-size:13px}.trainbar{display:flex;gap:10px 22px;align-items:center;flex-wrap:wrap;background:#20262d;border:1px solid var(--line);border-radius:16px;padding:14px 18px;margin:16px 0}.trainitem{display:flex;gap:7px;align-items:baseline}.trainitem small{color:var(--muted);font-size:12px}.trainitem strong{font-size:clamp(17px,3vw,23px)}.trainno strong{font-size:clamp(21px,4vw,28px);letter-spacing:.04em}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin:14px 0}.route{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.clock-wrap{display:flex;align-items:center;gap:9px;flex:0 0 auto}.elapsed-label{font-size:11px;color:var(--muted);font-weight:500;white-space:nowrap}.clock{font-size:clamp(28px,6vw,46px);font-weight:800;font-variant-numeric:tabular-nums}.clock.clock-tick{animation:clock-digit-change .22s ease-out}@keyframes clock-digit-change{0%{opacity:.35;transform:translateY(5px) rotateX(-14deg)}100%{opacity:1;transform:translateY(0) rotateX(0)}}@media(prefers-reduced-motion:reduce){.clock.clock-tick{animation:none}}.mainstation{margin-top:14px;background:#171c21;border:2px solid #8b674e;border-radius:18px;padding:clamp(18px,4vw,30px);text-align:center;min-height:210px;display:flex;flex-direction:column;justify-content:center}.mainstation.arrived{border-color:#478765}.station-label{color:var(--muted);font-size:14px;letter-spacing:.12em}.station-name{font-size:clamp(42px,9vw,76px);font-weight:850;line-height:1.15;margin:12px 0}.station-time{font-size:clamp(24px,5vw,36px);font-weight:800;font-variant-numeric:tabular-nums}.nextline{margin-top:12px;text-align:center;color:var(--muted);font-size:15px}.nextline strong{color:var(--text);font-size:19px;margin-left:8px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.actions button{flex:1;min-width:115px}.good{background:#28694d;border-color:#469a70}.actions #arrive{background:#a94b4b;border-color:#cf7777}.actions #pass{background:#b96b27;border-color:#df914b}.actions #advance,.actions #back,.actions #reset{background:#3a424c;border-color:#56616d}.primary{background:#875333;border-color:#bd805b}.delay{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.delay input{width:85px;background:#171c21;color:white;padding:9px;border:1px solid var(--line);border-radius:9px}.status{color:var(--green);font-size:13px;min-height:20px}.footer{text-align:center;color:var(--muted);font-size:11px;line-height:1.6;margin:24px 0}
 /* Tablet portrait: JR-Tokai-inspired vertical station sequence */
-.tablet-timeline,.tablet-actions,.tablet-console{display:none}
+.tablet-timeline,.tablet-actions,.tablet-console{display:block;margin:12px 0 18px;padding:12px 14px;background:#20262d;border:1px solid var(--line);border-radius:14px}
 @media (orientation:landscape), (max-width:699px), (min-width:700px) and (max-width:1300px) and (orientation:portrait){
   body{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   .wrap{min-height:100vh;min-height:100dvh}
   .panel{display:flex;flex-direction:column;min-height:0}
   #mainStation,#nextLine,.actions{display:none}
-  .tablet-timeline{display:flex;flex-direction:column;gap:8px;overflow:visible;overscroll-behavior:auto;max-height:none;min-height:210px;padding:4px 2px 8px}
+  .tablet-timeline{display:flex;flex-direction:column;gap:8px;overflow-y:auto;overscroll-behavior:contain;max-height:calc(100dvh - 470px);min-height:210px;padding:4px 2px 8px}
   .timeline-row{display:grid;grid-template-columns:100px minmax(0,1fr);align-items:center;gap:14px;min-height:62px;padding:9px 16px;border:1px solid var(--line);border-radius:12px;background:#20262d}
   .timeline-label{font-size:13px;color:var(--muted);font-weight:700;white-space:nowrap}
   .timeline-station{font-size:clamp(21px,3vw,29px);font-weight:800;line-height:1.2;overflow-wrap:anywhere}
@@ -34,14 +34,14 @@
   .timeline-row.next{border:1px solid var(--line);background:#20262d;min-height:100px}
   .timeline-row.current .timeline-station,.timeline-row.next .timeline-station{font-size:clamp(32px,5vw,48px);font-weight:850}
   .timeline-row.current .timeline-kind,.timeline-row.next .timeline-kind{font-size:14px}
-  .tablet-actions{position:fixed;z-index:20;left:50%;bottom:env(safe-area-inset-bottom);transform:translateX(-50%);display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(calc(100% - 32px),1018px);margin:0;padding:10px 0 8px;background:var(--bg)}
+  .tablet-actions{position:fixed;z-index:20;left:50%;bottom:env(safe-area-inset-bottom);transform:translateX(-50%);display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:10px;width:min(calc(100% - 32px),1018px);margin:0;padding:10px 0 8px;background:var(--bg)}
   .tablet-console{display:none}
   .console-title{font-size:13px;font-weight:750;color:var(--muted);margin-bottom:9px;letter-spacing:.08em}
   .console-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .console-controls button{min-width:112px;min-height:44px;background:#3a424c;border-color:#56616d;font-weight:700}
   .console-hint{font-size:12px;color:var(--muted)}
   .tablet-actions button{min-height:64px;font-size:clamp(17px,2.2vw,21px);font-weight:750}
-  .tablet-actions #tabletEndRun{min-height:72px;font-size:clamp(19px,2.4vw,24px);font-weight:750;background:#8b3434;border:2px solid #c75b5b}
+  .tablet-actions #tabletMainAction{min-height:72px;font-size:clamp(21px,2.6vw,27px);background:#28694d;border:2px solid #469a70}
   .tablet-actions #tabletMainAction.pass-mode{background:#b96b27;border-color:#df914b}
   .tablet-actions #tabletMainAction.end-mode{background:#8b3434;border-color:#c75b5b}
   .tablet-actions #tabletBack,.tablet-actions #tabletAdvance{background:#3a424c;border-color:#56616d}
@@ -56,7 +56,7 @@
   .tablet-actions{width:min(calc(100% - 20px),1018px);gap:7px}
   .tablet-actions button{padding:10px 8px;min-height:56px}
   .tablet-console{margin-bottom:14px}
-  .tablet-actions #tabletEndRun{min-height:62px}
+  .tablet-actions #tabletMainAction{min-height:62px}
   .timeline-row{grid-template-columns:100px minmax(0,1fr)}
   .timeline-row>div{min-width:0;max-width:100%}.timeline-info{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;min-width:0}.timeline-info .timeline-kind{white-space:nowrap;font-size:clamp(13px,1.8vw,17px);font-weight:750}.timeline-info .timeline-time{white-space:nowrap;font-size:clamp(25px,4.2vw,39px);font-weight:850;line-height:1.05;font-variant-numeric:tabular-nums;color:#f4f6f8}
   .timeline-station{display:block;min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:normal}
@@ -122,7 +122,8 @@ body:not(.anim-clock) .clock.clock-tick{animation:none!important}
 <div class="nextline" id="nextLine">次駅 <strong>尾張一宮</strong></div>
 <div class="tablet-timeline" id="tabletTimeline" aria-live="polite"></div>
 <div class="actions"><button class="good" id="depart">出発</button><button id="arrive">停車・到着</button><button id="pass">通過</button><button class="primary" id="advance">次駅へ進む</button><button id="back">1駅戻る</button><button id="reset">リセット</button><button id="endRun">運転終了</button></div></section>
-<div class="tablet-actions" id="tabletActions"><button id="tabletReset">リセット</button><button id="tabletEndRun" class="end-mode">運転終了</button></div>
+<div class="tablet-console" id="tabletConsole"><div class="console-title">操作板</div><div class="console-controls"><button id="tabletReset">リセット</button><span class="console-hint" id="tabletHint">停車駅では「発車」に切り替わります</span></div></div>
+<div class="tablet-actions" id="tabletActions"><button id="tabletBack">戻る</button><button id="tabletAdvance">進む</button><button class="tablet-primary" id="tabletMainAction">停車</button></div>
 <div class="status" id="status"></div>
 </main><script>
 applyAnimationPrefs();
@@ -152,7 +153,8 @@ function renderTabletTimeline(){const el=$("tabletTimeline");if(!el)return;const
  if(next>0&&next<stations.length){const slow=stations[next]?.slow===true;const speed=stations[next]?.slowSpeed;html+='<div class="timeline-track" aria-hidden="true"><span class="timeline-slow-sign" '+(slow?"":"hidden")+'>'+(speed?"徐行 "+escapeHtml(speed)+" km/h":"徐行")+'</span></div>'}
  if(!isRunning){const here=stations[current];const time=stationTimeText(here,"dep");html+='<div class="timeline-row current"><span class="timeline-label">現在地</span><div class="timeline-info"><div class="timeline-main"><strong class="timeline-station">'+escapeHtml(here.name||"—")+'</strong>'+(time?'<span class="timeline-time">'+time+'</span>':"")+'</div>'+protectionChangeHtml(here)+'</div></div></div>'}
  el.innerHTML=html;
-
+ const target=stations[next];const action=$("tabletMainAction");if(state==="停車中"&&idx>=stations.length-1){action.textContent="運転終了";action.classList.remove("pass-mode");action.classList.add("end-mode");action.disabled=false}else if(state==="停車中"){action.textContent="発車";action.classList.remove("pass-mode","end-mode");action.disabled=current>=stations.length-1}else if(target&&target.stop==="通過"){action.textContent="通過";action.classList.remove("end-mode");action.classList.add("pass-mode");action.disabled=false}else{action.textContent="停車";action.classList.remove("pass-mode","end-mode");action.disabled=!target}
+ $("tabletBack").disabled=current<=0;$("tabletAdvance").disabled=current>=stations.length-1;$("tabletHint").textContent=state==="停車中"?"停車中：次駅を確認して「発車」":target?(target.stop==="通過"?"次駅は通過駅です":"次駅は停車駅です"):"終点です";
 }
 function msg(t){$("status").textContent=t}
 $("depart").onclick=()=>{if(idx>=d.stations.length-1){state="終点";render();msg("終点のため次駅はありません");return}idx++;state="運転中";render();msg(d.stations[idx].name+" を次駅として表示中")};
@@ -160,11 +162,15 @@ $("arrive").onclick=()=>{state="停車中";seconds=0;last=Date.now();$("clock").
 $("pass").onclick=()=>{if(idx>=d.stations.length){state="終点";render();msg("終点のため通過できる駅はありません");return}const passed=d.stations[idx]?.name||"駅";if(idx<d.stations.length-1){idx++;state="通過";render();msg(passed+" を通過扱いにしました。次駅："+d.stations[idx].name)}else{state="終点";render();msg(passed+" を通過扱いにしました。終点です")}};
 $("advance").onclick=()=>{if(idx<d.stations.length-1){idx++;state=d.stations[idx].stop==="通過"?"通過":"停車中";render();msg("次駅へ進みました")}else msg("終点です")};
 $("back").onclick=()=>{idx=Math.max(0,idx-1);state="停車中";render();msg("1駅戻りました")};
-$("reset").onclick=()=>{idx=0;state="停車中";seconds=0;started=false;localStorage.removeItem("staffRunActive");last=Date.now();$("clock").textContent="00:00:00";render();msg("リセットしました")};
+$("reset").onclick=()=>{idx=0;state="停車中";seconds=0;started=false;localStorage.removeItem("staffRunActive");last=Date.now();$("clock").textContent="00:00:00";$("tabletBack").disabled=false;$("tabletAdvance").disabled=false;$("tabletMainAction").disabled=false;render();msg("リセットしました")};
 
-$("endRun").onclick=()=>{started=false;localStorage.removeItem("staffRunActive");pageTransitionTo("settings.html")};
+$("tabletBack").onclick=()=>{$("back").click()};$("endRun").onclick=()=>{started=false;localStorage.removeItem("staffRunActive");pageTransitionTo("settings.html")};
 $("tabletReset").onclick=()=>{$("reset").click()};
-$("tabletEndRun").onclick=()=>{$("endRun").click()};
+$("tabletAdvance").onclick=()=>{$("depart").click()};
+$("tabletMainAction").onclick=()=>{if(state==="停車中"&&idx>=d.stations.length-1){state="運転終了";started=false;localStorage.removeItem("staffRunActive");msg("終点に到着しました。設定画面に戻ります");pageTransitionTo("settings.html");return}if(state==="停車中"){if(idx>=d.stations.length-1)return;idx++;state="運転中";render();msg(d.stations[idx].name+" に向けて発車しました");return}
+ if(idx>=d.stations.length)return;
+ const target=d.stations[idx];
+ if(target.stop==="通過"){const passed=target.name;idx=Math.min(idx+1,d.stations.length-1);state="運転中";render();msg(passed+" を通過しました")}else{state="停車中";seconds=0;last=Date.now();$("clock").textContent="00:00:00";render();msg(target.name+" に停車しました")}};
 window.addEventListener("resize",()=>{if(tabletPortrait())renderTabletTimeline()});document.querySelectorAll('a[href="settings.html"]').forEach(link=>link.addEventListener("click",e=>{e.preventDefault();pageTransitionTo("settings.html")}));document.body.classList.add("page-enter");
 
 
