@@ -75,7 +75,9 @@ $("xlsxTemplate").onclick=()=>{
   ["J",time(10,22,10),null,null,"",null,null,null,null]
  ];
  examples.forEach((values,i)=>{sampleRows[i+8][1]=i+1;values.forEach((v,j)=>{if(v!==null)sampleRows[i+8][j+2]=v})});
+ sampleRows[3][12]="こちらは見本です";
  const sampleSheet=XLSX.utils.aoa_to_sheet(sampleRows);
+ sampleSheet["!ref"]="A1:O18";
  sampleSheet["!merges"]=[{s:{r:6,c:8},e:{r:6,c:10}},{s:{r:3,c:12},e:{r:8,c:14}}];
  sampleSheet["!cols"]=inputSheet["!cols"];
  ["D","E","F"].forEach(col=>{for(let r=9;r<=18;r++){const cell=sampleSheet[col+r];if(cell&&typeof cell.v==="number")cell.z="hh:mm:ss"}});
