@@ -6,7 +6,7 @@
 
 ## アプリ
 
-- **リンク:** https://neko20110106-create.github.io/digital-staff/settings.html
+- **リンク:** https://neko20110106-create.github.io/digital-staff/index.html
 
 ※基本的にはタブレットの縦画面推奨です。
 
