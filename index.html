@@ -56,7 +56,52 @@ $("import").onclick=()=>$("file").click();$("file").onchange=async e=>{try{if(!e
 function csvCell(value){let s=String(value??"");if(/^[\s\u0000-\u001f]*[=+\-@]/.test(s))s="\t"+s;return '"'+s.replace(/"/g,'""')+'"'}
 const csvHeaders=["列車番号","種別","行先","路線・方向","両数","駅名","着時刻","発時刻","停車/通過","徐行","徐行速度(km/h)","保安装置切り替え","切り替え前","切り替え後"];
 function makeCsv(rows){return "\uFEFF"+[csvHeaders,...rows].map(row=>row.map(csvCell).join(",")).join("\r\n")}
-$("template").onclick=()=>download("digital-staff-template.csv",makeCsv([["","","","","","","","","","","","","",""]]),"text/csv;charset=utf-8");
+$("template").onclick=()=>{
+ if(!window.XLSX){alert("Excelテンプレートの作成機能を読み込めませんでした。通信状態を確認してください。");return}
+ const makeSheet=(sample=false)=>{
+  const rows=Array.from({length:82},()=>Array(11).fill(""));
+  if(sample){
+   rows[1][1]="列車番号";rows[1][2]="0000M";
+   rows[2][1]="種別";rows[2][2]="普通";
+   rows[3][1]="行先";rows[3][2]="J";
+   rows[4][1]="路線/方向";rows[4][2]="中央線";
+   rows[5][1]="両数";rows[5][2]="8両";
+  }else{
+   rows[1][1]="列車番号";rows[2][1]="種別";rows[3][1]="行先";rows[4][1]="路線/方向";rows[5][1]="両数";
+  }
+  rows[6][8]="保安装置切り替え";
+  ["駅名","到着時刻","発車時刻","通過時間","停車/通過","徐行","切り替え前","→","切り替え後"].forEach((v,i)=>rows[7][i+2]=v);
+  for(let n=1;n<=30;n++)rows[n+7][1]=n;
+  if(sample){
+   const data=[
+    ["A","","10:00:00","","停車","","",""],
+    ["B","10:03:20","10:04:10","","停車","","",""],
+    ["C","10:06:10","10:06:50","","停車",30,"",""],
+    ["D","","","10:08:20","通過","","",""],
+    ["E","10:10:00","10:12:10","","停車","","P","S"],
+    ["F","10:13:50","10:14:30","","停車","","",""],
+    ["G","","","10:16:00","通過","","",""],
+    ["H","10:18:40","10:19:20","","停車","","",""],
+    ["I","10:20:00","10:20:50","","停車","","",""],
+    ["J","10:22:10","","","停車","","",""]
+   ];
+   data.forEach((r,i)=>r.forEach((v,j)=>rows[i+8][j+2]=v));
+  }
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws["!merges"]=[{s:{r:6,c:8},e:{r:6,c:10}}];
+  ws["!cols"]=[{wch:4.3},{wch:5},{wch:18.3},{wch:14},{wch:14},{wch:14},{wch:13},{wch:10},{wch:16},{wch:4},{wch:16}];
+  ws["!autofilter"]={ref:"B8:K38"};
+  return ws;
+ };
+ const wb=XLSX.utils.book_new();
+ XLSX.utils.book_append_sheet(wb,makeSheet(false),"入力シート");
+ const example=makeSheet(true);
+ example["M4"]={t:"s",v:"こちらは見本です"};
+ example["!ref"]="A1:O85";
+ example["!merges"].push({s:{r:3,c:12},e:{r:8,c:14}});
+ XLSX.utils.book_append_sheet(wb,example,"見本");
+ XLSX.writeFile(wb,"電子スタフ読み込みテンプレート.xlsx");
+};
 $("csv").onclick=()=>download("digital-staff-stations.csv",makeCsv(d.stations.map(s=>[d.train||"",d.kind||"",d.dest||"",d.line||"",d.cars||"",s.name||"",s.arr||"",s.dep||"",s.stop||"停車",s.slow?"オン":"オフ",s.slowSpeed||"",s.protectionChange?"オン":"オフ",s.protectionFrom||"",s.protectionTo||""])),"text/csv;charset=utf-8");
 function parseCsv(text){text=text.replace(/^\uFEFF/,"");const rows=[];let row=[],cell="",quoted=false;for(let i=0;i<text.length;i++){const ch=text[i];if(quoted){if(ch==='"'&&text[i+1]==='"'){cell+='"';i++}else if(ch==='"')quoted=false;else cell+=ch}else if(ch==='"')quoted=true;else if(ch===","){row.push(cell);cell=""}else if(ch==="\n"){row.push(cell.replace(/\r$/,""));rows.push(row);row=[];cell=""}else cell+=ch}if(cell.length||row.length){row.push(cell.replace(/\r$/,""));rows.push(row)}return rows.filter(r=>r.some(v=>String(v).trim()!==""))}
 function excelCell(sheet,row,col){const cell=sheet[XLSX.utils.encode_cell({r:row-1,c:col-1})];return cell?cell.v:""}
